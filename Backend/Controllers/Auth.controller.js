@@ -7,7 +7,8 @@ import {generateTokenAndSetCookie} from '../Utils/generateTokenAndSetCookie.js'
 import {
     sendVerificationEmail, 
     sendWelcomeEmail, 
-    sentResetPasswordEmail
+    sentResetPasswordEmail,
+    sentResetSuccessEmail
 } from '../Mailtrap/emails.js'
 
 export const signup = async (req,res) =>{
@@ -121,7 +122,7 @@ export const verifyEmail = async (req,res) =>{
 
 }
 
-export const foegetPassword = async (req,res) =>{
+export const forgetPassword = async (req,res) =>{
     const {email} = req.body
     try {
         const user = await User.findOne({email})
@@ -133,13 +134,39 @@ export const foegetPassword = async (req,res) =>{
         user.resetPasswordExpiresAt = resetTokenExpiredAt
 
         await user.save();
-        await sentResetPasswordEmail(email, `${process.env.CLIENT_URL}/reset-pass/${resetToken}`) //sent email to reset password
+        await sentResetPasswordEmail(email, `${process.env.CLIENT_URL}/reset-password/${resetToken}`) //sent email to reset password
         return res.status(200).json({success: true, message: 'Password reset link sent to your email'})
 
     } catch (error) {
         console.log('error in forget password', error);
         return res.status(500).json({success: false, message: error})
-            
+    }
+}
+
+export const resetPassword = async (req,res) =>{
+    const {token} = req.params
+    const {password} = req.body
+    console.log('token', token, password)
+    try {
+
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpiresAt: {$gt: Date.now()}
+        })
         
+        if(!user) return res.status(400).json({success: false, message: 'Invalide or Expired token'})
+
+        const hashedPassword = await bcryptjs.hash(password, 10)
+        
+        user.password = hashedPassword;
+        user.resetPasswordToken = undefined
+        user.resetPasswordExpiresAt = undefined
+
+        await user.save()
+        await sentResetSuccessEmail(user.email)
+        return res.status(200).json({success:true, message: 'Password reset successfuly'})
+    } catch (error) {
+        console.log('error in reset password', error);
+        return res.status(500).json({success: false, message: error})
     }
 }
