@@ -6,6 +6,9 @@ import {
     forgetPassword,
     resetPassword
 } from '../Controllers/Auth.controller.js'
+import verifyToken from '../Middelware/verifyToken.js'
+
+router.get('check-auth',verifyToken, checkAuth)
 
 router.post('/signup',signup)
 router.post('/login',login)

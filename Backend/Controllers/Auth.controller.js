@@ -170,3 +170,6 @@ export const resetPassword = async (req,res) =>{
         return res.status(500).json({success: false, message: error})
     }
 }
+
+export const checkAuth = async (req, res) => {
+};
