@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom"
 
 import FloatingShape from "./Components/FloatingShape"
 import SignUp from "./Pages/SignUp"
+import Login from "./Pages/Login.jsx"
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
     <Routes>
       <Route path="/" element={'home'}/>
       <Route path="/signup" element={<SignUp/>} />
-      <Route path="/signin" element={'signin'}/>
+      <Route path="/login" element={<Login/>}/>
     </Routes>
     
     
