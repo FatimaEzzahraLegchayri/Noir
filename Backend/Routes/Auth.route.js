@@ -4,11 +4,12 @@ import {
     signup, login, logout, 
     verifyEmail,
     forgetPassword,
-    resetPassword
+    resetPassword,
+    checkAuth
 } from '../Controllers/Auth.controller.js'
-import verifyToken from '../Middelware/verifyToken.js'
+import {verifyToken} from '../Middelware/verifyToken.js'
 
-router.get('check-auth',verifyToken, checkAuth)
+router.get('/check-auth',verifyToken, checkAuth)
 
 router.post('/signup',signup)
 router.post('/login',login)

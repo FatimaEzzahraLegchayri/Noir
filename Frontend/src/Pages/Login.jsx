@@ -57,7 +57,7 @@ function Login() {
 				type='submit'
 				disabled={loading}
 			>
-            {loading ? <Loader className='w-6 h-6 animate-spin  mx-auto' /> : "Login"}
+        {loading ? <Loader className='w-6 h-6 animate-spin  mx-auto' /> : "Login"}
 
 			</motion.button>
 

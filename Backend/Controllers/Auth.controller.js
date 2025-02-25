@@ -13,13 +13,11 @@ import {
 
 export const signup = async (req,res) =>{
     const { name, email, password } = req.body;
-    console.log('req.body back ...', req.body)
     try {
         if(!email || !name || !password){
             return res.status(400).json({success: false, message: 'All fields are required.'})
         }
         const isEmailExist = await User.findOne({email})
-        console.log('isEmailExist', isEmailExist)
         if(isEmailExist){
             return res.status(400).json({success: false, message: 'Email already in use.'})
         }
@@ -34,7 +32,6 @@ export const signup = async (req,res) =>{
             verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000 // 24h
         })
         await user.save()
-
         generateTokenAndSetCookie(res, user._id)
         await sendVerificationEmail(user.email, verificationToken)
 
@@ -172,4 +169,20 @@ export const resetPassword = async (req,res) =>{
 }
 
 export const checkAuth = async (req, res) => {
+    try {
+		if (!req.userId) {
+            console.log('req.userId in ckeckaAuth', req.userId)
+            return res.status(400).json({ success: false, message: "Invalid request - No userId" });
+        }
+        const user = await User.findById(req.userId).select("-password");
+        console.log('user in check back', user)
+		if (!user) {
+			return res.status(400).json({ success: false, message: "User not found" });
+		}
+
+		return res.status(200).json({ success: true, user });
+	} catch (error) {
+		console.log("Error in checkAuth ", error);
+		return res.status(400).json({ success: false, message: error.message });
+	}
 };
