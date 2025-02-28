@@ -5,7 +5,7 @@ import {Link, useNavigate} from 'react-router-dom'
 
 import Input from '../Components/Input'
 import PasswordStrength from '../Components/Auth/PasswordStrength'
-import {useAuthStore} from '../Store/AuthStore.js'
+import useAuthStore from '../Store/AuthStore.js'
 
 
 function SignUp() {

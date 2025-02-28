@@ -6,9 +6,9 @@ import FloatingShape from "./Components/FloatingShape"
 import SignUp from "./Pages/SignUp"
 import Login from "./Pages/Login.jsx"
 import EmailVerification from "./Pages/EmailVerification.jsx"
-import {useAuthStore} from './Store/AuthStore.js'
+import useAuthStore from './Store/AuthStore.js'
 import ProfilePage from './Pages/ProfilePage.jsx'
-
+import LoadingSpinner from './Components/LoadingSpinner.jsx'
 
 // protect routes that require authentication
 const ProtectedRoute = ({ children }) => {
@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }) => {
 		return <Navigate to='/login' replace />;
 	}
 
-	if (!user.isVerified) {
+	if (!user?.isVerified) {
 		return <Navigate to='/verify-email' replace />;
 	}
 
@@ -28,8 +28,7 @@ const ProtectedRoute = ({ children }) => {
 // redirect authenticated users to the home page
 const RedirectAuthenticatedUser = ({ children }) => {
 	const { isAuthenticated, user } = useAuthStore();
-
-	if (isAuthenticated && user.isVerified) {
+	if (isAuthenticated && user?.isVerified) {
 		return <Navigate to='/' replace />;
 	}
 
@@ -41,15 +40,10 @@ function App() {
   const {checkAuth, user, isAuthenticated, isCheckingAuth } = useAuthStore()
 
 	useEffect(() => {
-		checkAuth();
+        checkAuth();
 	}, [checkAuth]);
+	if(isCheckingAuth) return <LoadingSpinner />
  
-
-  // console.log('isAuthenticated', isAuthenticated)
-  // console.log('user', user)
-  // console.log('checkAuth', checkAuth())
-  // console.log('isCheckingAuth', isCheckingAuth)
-
   return (
     <div className="min-h-screen bg-gradient-to-br
       from-blue-900 via-em-900 to-rose-900 flex items-center justify-center relative overflow-hidden">

@@ -53,6 +53,9 @@ export const signup = async (req,res) =>{
 export const login = async (req,res) =>{
     const {email, password} = req.body
     try {
+        if(!email || !password){
+            return res.status(400).json({success: false, message: 'All fields are required.'})
+        }
         const user = await User.findOne({email})
         if(!user){
             return res.status(400).json({success: false, message: 'Invalid email.'})
@@ -61,6 +64,7 @@ export const login = async (req,res) =>{
         if(!isPasswordValid) return res.status(400).json({success: false, message:"Invalid Password"})
     
         generateTokenAndSetCookie(res, user._id)
+        // console.log('res, user._id ..........', user._id)
         user.lastLogin = new Date()
         await user.save()
 
@@ -171,11 +175,11 @@ export const resetPassword = async (req,res) =>{
 export const checkAuth = async (req, res) => {
     try {
 		if (!req.userId) {
-            console.log('req.userId in ckeckaAuth', req.userId)
+            // console.log('req.userId in ckeckaAuth', req.userId)
             return res.status(400).json({ success: false, message: "Invalid request - No userId" });
         }
         const user = await User.findById(req.userId).select("-password");
-        console.log('user in check back', user)
+        // console.log('user in check back', user)
 		if (!user) {
 			return res.status(400).json({ success: false, message: "User not found" });
 		}
