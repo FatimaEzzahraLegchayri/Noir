@@ -1,16 +1,18 @@
 import express from "express";
 import dotenv from "dotenv";
+dotenv.config({ path: '../.env' })
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import path from "path";
+// import path from "path";
 
 import { connectDb } from "./Db/Connect.Db.js";
 
 import authRoutes from "./Routes/Auth.route.js";
 
+console.log(process.env.JWT_SECRET); 
 const app = express();
 const PORT = process.env.PORT;
-const __dirname = path.resolve();
+// const __dirname = path.resolve();
 dotenv.config();
 
 
@@ -21,13 +23,13 @@ app.use(express.json()); // allows us to parse incoming requests:req.body
 
 app.use("/auth", authRoutes);
 
-if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.join(__dirname, "/frontend/dist")));
+// if (process.env.NODE_ENV === "production") {
+// 	app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-	});
-}
+// 	app.get("*", (req, res) => {
+// 		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+// 	});
+// }
 
 app.listen(PORT, () => {
 	connectDb();
