@@ -9,6 +9,9 @@ import EmailVerification from "./Pages/EmailVerification.jsx"
 import useAuthStore from './Store/AuthStore.js'
 import ProfilePage from './Pages/ProfilePage.jsx'
 import LoadingSpinner from './Components/LoadingSpinner.jsx'
+import ForgetPassword from './Pages/ForgetPassword.jsx'
+import ResetPassword from './Pages/ResetPassword.jsx'
+
 
 // protect routes that require authentication
 const ProtectedRoute = ({ children }) => {
@@ -42,6 +45,7 @@ function App() {
 	useEffect(() => {
         checkAuth();
 	}, [checkAuth]);
+
 	if(isCheckingAuth) return <LoadingSpinner />
  
   return (
@@ -78,7 +82,21 @@ function App() {
 					}
 				/>
 				<Route path='/verify-email' element={<EmailVerification />} />
-
+				<Route path='/forgot-password' 
+					element={
+						<RedirectAuthenticatedUser>
+							<ForgetPassword />
+						</RedirectAuthenticatedUser>
+					} 
+				/>
+				<Route
+					path='/reset-password'
+					element={
+						<RedirectAuthenticatedUser>
+							<ResetPassword />
+						</RedirectAuthenticatedUser>
+					}
+				/>
 			</Routes>
     
       <Toaster />
