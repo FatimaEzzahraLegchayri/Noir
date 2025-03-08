@@ -42,12 +42,10 @@ export const signup = async (req,res) =>{
                 ...user._doc,
                 password: undefined
             }
-        })
-        
+        }) 
     } catch (error) {
         return res.status(500).json({success: false, message: error.message})
     }
-
 }
 
 export const login = async (req,res) =>{
@@ -174,17 +172,11 @@ export const resetPassword = async (req,res) =>{
 
 export const checkAuth = async (req, res) => {
     try {
-		if (!req.userId) {
-            // console.log('req.userId in ckeckaAuth', req.userId)
-            return res.status(400).json({ success: false, message: "Invalid request - No userId" });
+		if (!req.user) {
+            return res.status(400).json({ success: false, message: "Invalid request - No user data found" });
         }
-        const user = await User.findById(req.userId).select("-password");
-        // console.log('user in check back', user)
-		if (!user) {
-			return res.status(400).json({ success: false, message: "User not found" });
-		}
 
-		return res.status(200).json({ success: true, user });
+		return res.status(200).json({ success: true, user: req.user });
 	} catch (error) {
 		console.log("Error in checkAuth ", error);
 		return res.status(400).json({ success: false, message: error.message });

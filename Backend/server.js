@@ -5,9 +5,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 // import path from "path";
 
-import { connectDb } from "./Db/Connect.Db.js";
-
+import { connectDb } from "./Config/Connect.Db.js";
 import authRoutes from "./Routes/Auth.route.js";
+import cartRoutes from './Routes/Cart.route.js'
+import paymentRoutes from './Routes/Cart.route.js'
 
 console.log(process.env.JWT_SECRET); 
 const app = express();
@@ -22,6 +23,9 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json()); // allows us to parse incoming requests:req.body
 
 app.use("/auth", authRoutes);
+app.use("/cart", cartRoutes);
+app.use("/payments", paymentRoutes);
+app.use("/analytics", analyticsRoutes);
 
 // if (process.env.NODE_ENV === "production") {
 // 	app.use(express.static(path.join(__dirname, "/frontend/dist")));

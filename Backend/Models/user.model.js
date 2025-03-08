@@ -22,6 +22,23 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default: false
     },
+    cartItems:[
+        {
+            quantity:{
+                type:Number,
+                default:0   
+            },
+            product:{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Product'
+            }
+        }
+    ],
+    role: {
+        type: String,
+        enum: ["customer", "admin"],
+        default: "customer",
+    },
     resetPasswordToken : String,
     resetPasswordExpiresAt : Date,
     verificationToken : String,
